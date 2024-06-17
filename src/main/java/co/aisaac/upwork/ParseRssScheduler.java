@@ -3,16 +3,19 @@ package co.aisaac.upwork;
 import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.safety.Safelist;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 public class ParseRssScheduler {
+
+    static class Job {
+        String budget, category, skills, country, datetime, locationRequirements, hourlyRange;
+    }
 
     @Scheduled(fixedDelay = 5 * 1000)
     public void run() throws IOException {
@@ -23,18 +26,16 @@ public class ParseRssScheduler {
 
         RssReader rssReader = new RssReader();
         List<Item> items = rssReader.read(url).toList();
-        for (var item : items) {
-            var desc = item.getDescription();
 
-            if (desc.isPresent()) {
-                Document doc = Jsoup.parse(desc.get());
-                System.out.println(doc.wholeText());
+        List<String> texts = items.stream()
+                .map(Item::getDescription)
+                .filter(Optional::isPresent)
+                .map(s -> Jsoup.parse(s.get()).wholeText())
+                .map(t -> t.replaceAll("\n\n", "\n"))
+                .toList();
 
-            } else {
-                System.out.println("Unable to parse description.");
 
-            }
-        }
+        texts.forEach(System.out::println);
     }
 
 }
