@@ -2,19 +2,36 @@ package co.aisaac.upwork;
 
 import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
+import org.apache.logging.log4j.util.Strings;
 import org.jsoup.Jsoup;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 public class ParseRssScheduler {
 
     static class Job {
-        String budget, category, skills, country, datetime, locationRequirements, hourlyRange;
+        String budget, category, skills, country, datetime, locationRequirements, hourlyRange, description;
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Budget: " + budget + "\n");
+            sb.append("Category: " + category + "\n");
+            sb.append("Skills: " + skills + "\n");
+            sb.append("Country: " + country + "\n");
+            sb.append("Datetime: " + datetime + "\n");
+            sb.append("LocationRequirements: " + locationRequirements + "\n");
+            sb.append("HourlyRange: " + hourlyRange + "\n");
+            return sb.toString();
+        }
     }
 
     @Scheduled(fixedDelay = 5 * 1000)
@@ -34,8 +51,41 @@ public class ParseRssScheduler {
                 .map(t -> t.replaceAll("\n\n", "\n"))
                 .toList();
 
+        List<Job> jobs = new ArrayList<>();
 
-        texts.forEach(System.out::println);
+        for (String text : texts) {
+            Job job = new Job();
+            String[] lines = text.split("\n");
+
+            for (String line : lines) {
+                if (line.startsWith("Budget:")) {
+                    job.budget = line.substring(8).trim();
+                } else if (line.startsWith("Hourly Range:")) {
+                    job.hourlyRange = line.substring(13).trim();
+                } else if (line.startsWith("Category:")) {
+                    job.category = line.substring(10).trim();
+                } else if (line.startsWith("Posted On:")) {
+                    job.datetime = line.substring(11).trim();
+                } else if (line.startsWith("Country:")) {
+                    job.country = line.substring(9).trim();
+                } else if (line.startsWith("Skills:")) {
+                    String s = line.substring(7).trim();
+                    String clean = Arrays.stream(s.split(",")).map(String::trim).collect(Collectors.joining(", "));
+                    if (job.skills != null) {
+                        job.skills = job.skills + ", " + clean;
+                    } else {
+                        job.skills = clean;
+                    }
+                }
+            }
+
+            job.description = text;
+            jobs.add(job);
+        }
+
+        for (Job job : jobs) {
+            System.out.println(job);
+            System.out.println("\n");
+        }
     }
-
 }
