@@ -58,17 +58,23 @@ public class ParseRssScheduler {
             String[] lines = text.split("\n");
 
             for (String line : lines) {
-                if (line.startsWith("Budget:")) {
+
+                if (line.startsWith("Budget:"))
                     job.budget = line.substring(8).trim();
-                } else if (line.startsWith("Hourly Range:")) {
+
+                else if (line.startsWith("Hourly Range:"))
                     job.hourlyRange = line.substring(13).trim();
-                } else if (line.startsWith("Category:")) {
+
+                else if (line.startsWith("Category:"))
                     job.category = line.substring(10).trim();
-                } else if (line.startsWith("Posted On:")) {
+
+                else if (line.startsWith("Posted On:"))
                     job.datetime = line.substring(11).trim();
-                } else if (line.startsWith("Country:")) {
+
+                else if (line.startsWith("Country:"))
                     job.country = line.substring(9).trim();
-                } else if (line.startsWith("Skills:")) {
+
+                else if (line.startsWith("Skills:")) {
                     String s = line.substring(7).trim();
                     String clean = Arrays.stream(s.split(",")).map(String::trim).collect(Collectors.joining(", "));
                     if (job.skills != null) {
@@ -77,6 +83,7 @@ public class ParseRssScheduler {
                         job.skills = clean;
                     }
                 }
+
             }
 
             job.description = text;
