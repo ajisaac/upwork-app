@@ -2,7 +2,6 @@ package co.aisaac.upwork;
 
 import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
-import org.apache.logging.log4j.util.Strings;
 import org.jsoup.Jsoup;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,7 +33,7 @@ public class ParseRssScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 5 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void run() throws IOException {
         String url = "https://www.upwork.com/ab/feed/jobs/rss?category2_uid=531770282580668418" +
                 "&contractor_tier=2%2C3&hourly_rate=40-&paging=NaN-undefined" +
@@ -94,5 +93,9 @@ public class ParseRssScheduler {
             System.out.println(job);
             System.out.println("\n");
         }
+
+        // tomorrow
+        // store jobs in database
+        // send emails or do notification when java jobs show up
     }
 }
