@@ -1,7 +1,7 @@
 package co.aisaac.upwork.security;
 
-import co.aisaac.upwork.User;
-import co.aisaac.upwork.UserRepository;
+import co.aisaac.upwork.model.User;
+import co.aisaac.upwork.model.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

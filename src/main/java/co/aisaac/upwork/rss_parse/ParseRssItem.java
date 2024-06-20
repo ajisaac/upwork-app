@@ -1,6 +1,6 @@
 package co.aisaac.upwork.rss_parse;
 
-import co.aisaac.upwork.Posting;
+import co.aisaac.upwork.model.Posting;
 import com.apptasticsoftware.rssreader.Item;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -25,32 +25,38 @@ class ParseRssItem {
 
             for (String line : lines) {
 
-                if (line.startsWith("Budget:")) {
-                    posting.budget = line.substring(8).trim();
-                } else if (line.startsWith("Hourly Range:")) {
-                    posting.hourlyRange = line.substring(13).trim();
-                } else if (line.startsWith("Category:")) {
-                    posting.category = line.substring(10).trim();
-                } else if (line.startsWith("Posted On:")) {
-                    try {
-                        posting.datetime = LocalDateTime.parse(line.substring(11).trim());
-                    } catch (Exception ex) {
-                        posting.datetime = LocalDateTime.now();
+                try {
+
+                    if (line.trim().equals("Budget:")) {
+                        posting.budget = "";
+                    } else if (line.startsWith("Budget:")) {
+                        posting.budget = line.substring(8).trim();
+                    } else if (line.startsWith("Hourly Range:")) {
+                        posting.hourlyRange = line.substring(13).trim();
+                    } else if (line.startsWith("Category:")) {
+                        posting.category = line.substring(10).trim();
+                    } else if (line.startsWith("Posted On:")) {
+                        try {
+                            posting.datetime = LocalDateTime.parse(line.substring(11).trim());
+                        } catch (Exception ex) {
+                            posting.datetime = LocalDateTime.now();
+                        }
+                    } else if (line.startsWith("Country:")) {
+                        posting.country = line.substring(9).trim();
+                    } else if (line.startsWith("Skills:")) {
+                        String s = line.substring(7).trim();
+                        posting.skills = Arrays
+                                .stream(s.split(","))
+                                .map(String::trim)
+                                .collect(Collectors.joining(", "));
                     }
-                } else if (line.startsWith("Country:")) {
-                    posting.country = line.substring(9).trim();
-                } else if (line.startsWith("Skills:")) {
-                    String s = line.substring(7).trim();
-                    String clean = Arrays.stream(s.split(",")).map(String::trim).collect(Collectors.joining(", "));
-                    if (posting.skills != null) {
-                        posting.skills = posting.skills + ", " + clean;
-                    } else {
-                        posting.skills = clean;
-                    }
+                } catch (StringIndexOutOfBoundsException ex) {
+                    log.error("Out of bounds for line: {}", line, ex);
                 }
 
             }
             posting.description = text;
+            posting.htmlDescription = description.get();
         } else {
             log.warn("Unable to find description on RSS feed item.");
             return null;
@@ -86,6 +92,8 @@ class ParseRssItem {
             log.warn("Unable to find URL for RSS feed item.");
             return null;
         }
+
+        posting.status = "new";
 
         return posting;
     }

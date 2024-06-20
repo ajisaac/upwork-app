@@ -1,7 +1,7 @@
 package co.aisaac.upwork.rss_parse;
 
-import co.aisaac.upwork.Posting;
-import co.aisaac.upwork.PostingRepo;
+import co.aisaac.upwork.model.Posting;
+import co.aisaac.upwork.model.PostingRepo;
 import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class ParseRssScheduler {
     public void run() throws IOException {
         String url = "https://www.upwork.com/ab/feed/jobs/rss" +
                 "?category2_uid=531770282580668418" +
-                "&contractor_tier=2%2C3&hourly_rate=40-" +
+                "&contractor_tier=2%2C3" +
                 "&sort=recency" +
                 "&t=0" +
                 "&api_params=1" +
@@ -40,15 +40,15 @@ public class ParseRssScheduler {
                 continue;
             }
 
-            System.out.println(posting);
-            System.out.println("\n");
-
             if (postingRepo.existsByGuid(posting.guid) == false) {
                 log.info("Saving job {}", posting.url);
+                System.out.println(posting);
+                System.out.println("\n");
                 postingRepo.save(posting);
             } else {
                 log.info("Job already exists {}", posting.url);
             }
+
         }
 
         // tomorrow
