@@ -1,4 +1,4 @@
-package co.aisaac.upwork;
+package co.aisaac.upwork.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,9 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -39,6 +39,13 @@ public class Posting {
     @Column(name = "hourly_range")
     public String hourlyRange;
     public String description;
+
+    @Column(name = "html_description")
+    public String htmlDescription;
+
+    @Transient
+    public String shortDescription;
+
     public LocalDateTime datetime;
 
     @Column(name = "pub_date")
@@ -47,11 +54,14 @@ public class Posting {
     // for unique check
     public String guid;
 
+    public String status;
+
     @Override
     public String toString() {
         return "Posting{" +
                 "id=" + id + ",\n" +
                 "url='" + url + "',\n" +
+                "status='" + status + "',\n" +
                 "title='" + title + "',\n" +
                 "budget='" + budget + "',\n" +
                 "category='" + category + "',\n" +
