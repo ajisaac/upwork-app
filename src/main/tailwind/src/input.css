@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.btn-link {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+
+    font-family: arial, sans-serif;
+    font-size: unset;
+
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.job__status-new {
+    color: yellow;
+    background-color: green;
+}
+
+.job__status-declined {
+    color: yellow;
+    background-color: orange;
+}
+
+.job__status-interested {
+    color: #d1baff;
+    background-color: #5914ec;
+}
+
+.job__status-later {
+    color: #98eeec;
+    background-color: grey;
+}
+
+.job__status-applied {
+    color: yellow;
+    background-color: blue;
+}
+
+.job__status-interviewing {
+    color: yellow;
+    background-color: magenta;
+}
+
+.job__status-rejected {
+    color: yellow;
+    background-color: red;
+}
+
+.highlight {
+    background-color: aqua;
+}
+
+a {
+    color: rgb(0, 0, 238);
+    font-family: arial, sans-serif;
+}
