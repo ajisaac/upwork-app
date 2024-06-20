@@ -19,7 +19,7 @@ import lombok.ToString;
 public class User {
 
     @Id
-    @SequenceGenerator(name = "users_id_generator", sequenceName = "users_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "users_id_generator", sequenceName = "upwork.users_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_generator")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
