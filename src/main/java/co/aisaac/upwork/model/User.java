@@ -1,4 +1,4 @@
-package co.aisaac.upwork;
+package co.aisaac.upwork.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
