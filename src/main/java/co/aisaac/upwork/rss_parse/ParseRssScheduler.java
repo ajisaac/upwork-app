@@ -35,7 +35,7 @@ public class ParseRssScheduler {
         for (Item item : rssReader.read(url).toList()) {
 
             Posting posting = ParseRssItem.parse(item);
-            if(posting == null){
+            if (posting == null) {
                 log.warn("Unable to parse RSS feed item.");
                 continue;
             }
@@ -44,7 +44,10 @@ public class ParseRssScheduler {
             System.out.println("\n");
 
             if (postingRepo.existsByGuid(posting.guid) == false) {
+                log.info("Saving job {}", posting.url);
                 postingRepo.save(posting);
+            } else {
+                log.info("Job already exists {}", posting.url);
             }
         }
 

@@ -13,7 +13,6 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@ToString
 @Getter
 @Setter
 @Entity(name = "postings")
@@ -21,21 +20,48 @@ import java.time.LocalDateTime;
 public class Posting {
 
     @Id
-    @SequenceGenerator(name = "postings_id_generator", sequenceName = "postings_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "postings_id_generator", sequenceName = "upwork.postings_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "postings_id_generator")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @Column(nullable = false, unique = true)
     public String url;
+    public String title;
     public String budget;
     public String category;
     public String skills;
     public String country;
+
     @Column(name = "location_requirements")
     public String locationRequirements;
+
     @Column(name = "hourly_range")
     public String hourlyRange;
     public String description;
     public LocalDateTime datetime;
+
+    @Column(name = "pub_date")
+    public LocalDateTime pubDate;
+
+    // for unique check
+    public String guid;
+
+    @Override
+    public String toString() {
+        return "Posting{" +
+                "id=" + id + ",\n" +
+                "url='" + url + "',\n" +
+                "title='" + title + "',\n" +
+                "budget='" + budget + "',\n" +
+                "category='" + category + "',\n" +
+                "skills='" + skills + "',\n" +
+                "country='" + country + "',\n" +
+                "locationRequirements='" + locationRequirements + "',\n" +
+                "hourlyRange='" + hourlyRange + "',\n" +
+                "datetime=" + datetime + ",\n" +
+                "pubDate=" + pubDate + ",\n" +
+                "guid='" + guid + "'" + ",\n" +
+                '}';
+    }
 }
