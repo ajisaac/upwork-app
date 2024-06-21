@@ -13,6 +13,10 @@ public class CountryFilter {
     }
 
     public boolean contains(String country) {
+        if (country == null || country.isBlank()) {
+            return true;
+        }
+
         for (String s : COUNTRIES) {
             if (country.trim().equalsIgnoreCase(s)) {
                 return true;
