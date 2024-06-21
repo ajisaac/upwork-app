@@ -44,8 +44,14 @@ public class ParseRssScheduler {
             }
 
             // filter country
-            if (countryFilter.contains(posting.country)) {
+            if (countryFilter.contains(posting.country) == false) {
                 log.warn("Not saving job from country: {}", posting.country);
+                continue;
+            }
+
+            // hourly only
+            if (posting.hourlyRange == null || posting.hourlyRange.isBlank()) {
+                log.warn("Job skipped, only parsing hourly jobs.");
                 continue;
             }
 
@@ -59,11 +65,5 @@ public class ParseRssScheduler {
             }
 
         }
-
-        // tomorrow
-        // store postings in database
-        // send emails or do notification when java postings show up
     }
-
-
 }

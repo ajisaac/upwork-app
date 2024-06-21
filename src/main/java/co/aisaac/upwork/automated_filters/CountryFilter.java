@@ -7,6 +7,8 @@ public class CountryFilter {
     private static final List<String> COUNTRIES = new ArrayList<>();
 
     static {
+        COUNTRIES.add("USA");
+        COUNTRIES.add("United States");
         COUNTRIES.add("");
     }
 
