@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titles filter</title>
+    <link rel="stylesheet" href="/output.css">
+</head>
+
+<body>
+<div class="container">
+    <nav>
+        <a th:href="@{/}">home</a> -
+        <a th:href="@{/titles}">titles</a>
+        <hr>
+    </nav>
+
+
+    <div class="mb-2">
+        <fieldset>
+            <legend>Filters</legend>
+            <div>
+                <div>
+                    <div>
+                        <form action="#" th:action="@{/titles}" th:object="${filter}" method="post">
+                            <div class="mb-2">
+                                <label for="search">Search</label>
+                                <input type="text" name="search" id="search" th:field="*{titleSearch}"
+                                       th:value="*{titleSearch}"/>
+                            </div>
+                            <input type="submit" value="Search">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+
+    <div class="mb-7 jobs-found">
+        Jobs Found: <span id="counter" th:text="${jobs.size()}"></span>
+    </div>
+
+    <div th:each="job:${jobs}">
+        <div class="mb-2" th:id="${'job-' + job.id}">
+
+            <div class="inline-block">
+                <button class="mr-2 btn-link" type="submit" name="declined" value="declined" th:data-id="${job.id}"
+                        data-status="declined" onclick="removeTitle(event)">declined
+                </button>
+            </div>
+            <div class="inline-block">
+                <button class="mr-2 btn-link" type="submit" name="interested" value="interested" th:data-id="${job.id}"
+                        data-status="interested" onclick="removeTitle(event)">interested
+                </button>
+            </div>
+
+            <a class="font-sans" href="/titles" th:text="${job.title}"
+                  onclick="toggleDescription(event)"></a>
+            <div class="job-description mt-5 mb-10 hidden" th:utext="${job.htmlDescription}"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    function decreaseCounter() {
+        let counter = document.getElementById('counter')
+        let count = counter.innerHTML
+        count = parseInt(count)
+        count = count - 1
+        counter.innerHTML = count
+    }
+
+    function toggleDescription(e) {
+        e.preventDefault()
+        let node = e.target.parentNode.querySelector('.job-description')
+        if (node.classList.contains("hidden")) {
+            node.classList.remove("hidden");
+        } else {
+            node.classList.add("hidden");
+        }
+    }
+
+    function removeTitle(e) {
+        e.preventDefault()
+        let status = e.target.dataset.status
+        let id = parseInt(e.target.dataset.id)
+
+        fetch('/status/' + id + '/' + status, {
+            method: 'POST',
+            headers: {
+                "X-CSRF-Token": "[[${_csrf.token}]]"
+            }
+        }).then((response) => {
+            if (response.ok) {
+                decreaseCounter()
+                document.querySelector('#job-' + id).remove()
+            }
+        })
+    }
+</script>
+</html>

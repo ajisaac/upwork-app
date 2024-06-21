@@ -16,4 +16,6 @@ public interface PostingRepo extends CrudRepository<Posting, Long> {
     List<Posting> findAllOrderByPostDate();
 
     boolean existsByGuid(String guid);
+
+    List<Posting> findAllByStatusOrderByPubDateDesc(String status);
 }

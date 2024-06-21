@@ -140,6 +140,14 @@
   }
 }
 
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .mb-28 {
   margin-bottom: 7rem;
 }
@@ -176,20 +184,8 @@
   margin-right: 0.5rem;
 }
 
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
-
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-
-.mb-20 {
-  margin-bottom: 5rem;
-}
-
-.mb-10 {
-  margin-bottom: 2.5rem;
+.mt-5 {
+  margin-top: 1.25rem;
 }
 
 .inline-block {
