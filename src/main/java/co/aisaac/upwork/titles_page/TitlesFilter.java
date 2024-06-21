@@ -1,4 +1,4 @@
-package co.aisaac.upwork;
+package co.aisaac.upwork.titles_page;
 
 import lombok.Getter;
 import lombok.Setter;

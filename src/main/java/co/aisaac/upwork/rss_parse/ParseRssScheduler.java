@@ -1,5 +1,6 @@
 package co.aisaac.upwork.rss_parse;
 
+import co.aisaac.upwork.automated_filters.CountryFilter;
 import co.aisaac.upwork.model.Posting;
 import co.aisaac.upwork.model.PostingRepo;
 import com.apptasticsoftware.rssreader.Item;
@@ -17,6 +18,8 @@ public class ParseRssScheduler {
 
     @Autowired
     PostingRepo postingRepo;
+
+    CountryFilter countryFilter = new CountryFilter();
 
     @Scheduled(fixedDelay = 1 * 60 * 1000)
     public void run() throws IOException {
@@ -37,6 +40,12 @@ public class ParseRssScheduler {
             Posting posting = ParseRssItem.parse(item);
             if (posting == null) {
                 log.warn("Unable to parse RSS feed item.");
+                continue;
+            }
+
+            // filter country
+            if (countryFilter.contains(posting.country)) {
+                log.warn("Not saving job from country: {}", posting.country);
                 continue;
             }
 

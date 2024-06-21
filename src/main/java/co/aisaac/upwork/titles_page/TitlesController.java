@@ -1,4 +1,4 @@
-package co.aisaac.upwork;
+package co.aisaac.upwork.titles_page;
 
 import co.aisaac.upwork.model.Posting;
 import co.aisaac.upwork.model.PostingRepo;
