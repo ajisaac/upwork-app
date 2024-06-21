@@ -7,6 +7,7 @@ import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -19,9 +20,17 @@ public class ParseRssScheduler {
     @Autowired
     PostingRepo postingRepo;
 
+    @Value("${application.rss.security_token}")
+    String securityToken;
+    @Value("${application.rss.user_uid}")
+    String userUid;
+    @Value("${application.rss.org_uid}")
+    String orgUid;
+
     CountryFilter countryFilter = new CountryFilter();
 
-    @Scheduled(fixedDelay = 1 * 60 * 1000)
+    // every minute
+    @Scheduled(fixedDelay = 60 * 1000)
     public void run() throws IOException {
         String url = "https://www.upwork.com/ab/feed/jobs/rss" +
                 "?category2_uid=531770282580668418" +
@@ -29,14 +38,15 @@ public class ParseRssScheduler {
                 "&sort=recency" +
                 "&t=0" +
                 "&api_params=1" +
-                "&securityToken=f2b1425b06ba5e895d96d6a621a0551c9cb3a8bee728999cb662cb574696abcffa77f426df80aff253a7028422fdcda0c91ff972aede682c39c4300e3bed2801" +
-                "&userUid=1299200877346168832" +
-                "&orgUid=1299200877350363137";
+                "&securityToken=" + securityToken +
+                "&userUid=" + userUid +
+                "&orgUid=" + orgUid;
 
         RssReader rssReader = new RssReader();
 
         for (Item item : rssReader.read(url).toList()) {
 
+            // parse RSS item
             Posting posting = ParseRssItem.parse(item);
             if (posting == null) {
                 log.warn("Unable to parse RSS feed item.");
@@ -45,13 +55,19 @@ public class ParseRssScheduler {
 
             // filter country
             if (countryFilter.contains(posting.country) == false) {
-                log.warn("Not saving job from country: {}", posting.country);
+                log.warn("Not saving job from {}.", posting.country);
                 continue;
             }
 
             // hourly only
             if (posting.hourlyRange == null || posting.hourlyRange.isBlank()) {
                 log.warn("Job skipped, only parsing hourly jobs.");
+                continue;
+            }
+
+            // filter out lower paying jobs
+            if (hasLowBudget(posting, 40)) {
+                log.warn("Job skipped, budget was only {}.", posting.hourlyRange);
                 continue;
             }
 
@@ -65,5 +81,36 @@ public class ParseRssScheduler {
             }
 
         }
+    }
+
+    private boolean hasLowBudget(Posting posting, int lowestDollarAmount) {
+
+        // parse hourly rating
+        String hourly = posting.getHourlyRange();
+        if (hourly == null || hourly.isBlank()) {
+            return true;
+        }
+
+        // ex. $4.00-$5.00
+        String[] split = hourly.split("-");
+        if (split.length > 2) {
+            // shouldn't ever happen
+            log.warn("The hourly range for this entry is odd: {}.", hourly);
+        }
+
+        int high = 0;
+        try {
+            // grab last number remove dollar sign
+            if (split.length == 1) {
+                high = (int) Float.parseFloat(split[0].substring(1));
+            } else if (split.length == 2) {
+                high = (int) Float.parseFloat(split[1].substring(1));
+            }
+        } catch (NumberFormatException nfe) {
+            log.error("Unable to parse hourly range {}.", hourly);
+            return false; // probably not that common, we will accept these for further investigation
+        }
+        return high < lowestDollarAmount;
+
     }
 }
