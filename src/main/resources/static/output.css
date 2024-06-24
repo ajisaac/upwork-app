@@ -144,6 +144,10 @@
   margin-bottom: 2.5rem;
 }
 
+.mb-16 {
+  margin-bottom: 4rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -162,10 +166,6 @@
 
 .mb-7 {
   margin-bottom: 1.75rem;
-}
-
-.mb-8 {
-  margin-bottom: 2rem;
 }
 
 .ml-0 {
@@ -192,8 +192,20 @@
   display: inline-block;
 }
 
+.flex {
+  display: flex;
+}
+
 .hidden {
   display: none;
+}
+
+.h-8 {
+  height: 2rem;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 .rounded-md {
@@ -203,6 +215,11 @@
 .px-1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
+}
+
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 .py-1 {
@@ -285,4 +302,29 @@
 a {
   color: rgb(0, 0, 238);
   font-family: arial, sans-serif;
+}
+
+@media (min-width: 640px) {
+  .sm\:block {
+    display: block;
+  }
+
+  .sm\:hidden {
+    display: none;
+  }
+
+  .sm\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:mb-28 {
+    margin-bottom: 7rem;
+  }
+
+  .md\:hidden {
+    display: none;
+  }
 }
