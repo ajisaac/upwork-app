@@ -59,17 +59,17 @@ public class ParseRssScheduler {
                 continue;
             }
 
-            // hourly only
-            if (posting.hourlyRange == null || posting.hourlyRange.isBlank()) {
-                log.warn("Job skipped, only parsing hourly jobs.");
-                continue;
-            }
-
-            // filter out lower paying jobs
-            if (hasLowBudget(posting, 40)) {
-                log.warn("Job skipped, budget was only {}.", posting.hourlyRange);
-                continue;
-            }
+//            // hourly only
+//            if (posting.hourlyRange == null || posting.hourlyRange.isBlank()) {
+//                log.warn("Job skipped, only parsing hourly jobs.");
+//                continue;
+//            }
+//
+//            // filter out lower paying jobs
+//            if (hasLowBudget(posting, 40)) {
+//                log.warn("Job skipped, budget was only {}.", posting.hourlyRange);
+//                continue;
+//            }
 
             if (postingRepo.existsByGuid(posting.guid) == false) {
                 log.info("Saving job {}", posting.url);
