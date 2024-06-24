@@ -7,16 +7,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Slf4j
-@Configuration
+//@Configuration
 public class CleanDatabase {
 
-    @Autowired
+//    @Autowired
     private PostingRepo repo;
 
     /**
      * Remove declined jobs every day
      */
-    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+//    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    // disable for time being
     void cleanDatabase() {
 
         log.warn("Deleting all jobs with declined status.");
